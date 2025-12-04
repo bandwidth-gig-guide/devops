@@ -1,0 +1,39 @@
+name: Production Pipeline
+
+on:
+  workflow_call:
+    secrets:
+      PAYLOAD_SECRET:
+        required: true
+      DO_HOST:
+        required: true
+      DO_USER:
+        required: true
+      DO_SSH_KEY:
+        required: true
+
+jobs:
+  version_bump:
+    uses: bandwidth-gig-guide/devops/.github/workflows/version-bump.yaml@main
+
+  publish:
+    needs: version_bump
+    uses: bandwidth-gig-guide/devops/.github/workflows/publish.yaml@main
+    with:
+      TAG: ${{ needs.version_bump.outputs.TAG }}
+      ORG: ${{ github.repository_owner }}
+      REGISTRY: ghcr.io
+      CONTAINER_NAME: ${{ github.event.repository.name }}
+    secrets:
+      PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+
+  deploy:
+    needs: publish
+    uses: bandwidth-gig-guide/devops/.github/workflows/deploy.yaml@main
+    with:
+      CONTAINER_NAME: ${{ github.event.repository.name }}
+      PATH_TO_DOCKER_COMPOSE_FOLDER: deployment/
+    secrets:
+      DO_HOST: ${{ secrets.DO_HOST }}
+      DO_USER: ${{ secrets.DO_USER }}
+      DO_SSH_KEY: ${{ secrets.DO_SSH_KEY }}
