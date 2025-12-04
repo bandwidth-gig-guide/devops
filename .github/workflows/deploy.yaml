@@ -19,7 +19,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to VM
+    name: Deploy to Production
     runs-on: ubuntu-latest
     steps:
       - name: Deploy via SSH

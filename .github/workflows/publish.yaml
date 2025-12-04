@@ -25,6 +25,7 @@ permissions:
 
 jobs:
   publish:
+    name: Publish to GHCR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

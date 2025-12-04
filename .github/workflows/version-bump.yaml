@@ -8,6 +8,7 @@ on:
 
 jobs:
   update-version-tag:
+    name: Update Version Tag
     runs-on: ubuntu-latest
     permissions:
       contents: write
