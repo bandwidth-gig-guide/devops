@@ -15,10 +15,15 @@ on:
 jobs:
   version_bump:
     uses: bandwidth-gig-guide/devops/.github/workflows/version-bump.yaml@main
+    permissions:
+      contents: write 
 
   publish:
     needs: version_bump
     uses: bandwidth-gig-guide/devops/.github/workflows/publish.yaml@main
+    permissions:
+      contents: read
+      packages: write
     with:
       TAG: ${{ needs.version_bump.outputs.TAG }}
       ORG: ${{ github.repository_owner }}
